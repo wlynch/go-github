@@ -26,7 +26,7 @@ func TestRepositoriesService_ListHooks(t *testing.T) {
 		t.Errorf("Repositories.ListHooks returned error: %v", err)
 	}
 
-	want := []Hook{Hook{ID:1}, Hook{ID:2}}
+	want := []Hook{Hook{ID: 1}, Hook{ID: 2}}
 	if !reflect.DeepEqual(hooks, want) {
 		t.Errorf("Repositories.ListHooks returned %+v, want %+v", hooks, want)
 	}
@@ -41,17 +41,17 @@ func TestRepositoriesService_CreateHook(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"web","events":["push"],"active":true,"config":{"url":"http://foo.com","content_type":"json"}}`)
 	})
 
-	configHook := NewWebHook([]string{"push"}, true,
-		HookConfig{"url":"http://foo.com", "content_type":"json"})
+	configHook := NewHook("web", []string{"push"}, true,
+		map[string]interface{}{"url": "http://foo.com", "content_type": "json"})
 	hook, err := client.Repositories.CreateHook("o", "r", configHook)
 	if err != nil {
 		t.Errorf("Repositories.CreateHook returned error: %+v", err)
 		return
 	}
 
-	want := Hook{ "", nil, nil, 1, HookOptions{"web", []string{"push"}, true,
-		HookConfig{"url":"http://foo.com", "content_type":"json",},},}
-		if !reflect.DeepEqual(*hook, want) {
+	want := Hook{"", nil, nil, 1, HookOptions{"web", []string{"push"}, true,
+		map[string]interface{}{"url": "http://foo.com", "content_type": "json"}}}
+	if !reflect.DeepEqual(*hook, want) {
 		t.Errorf("Repositories.CreateHook returned %+v, want %+v", *hook, want)
 	}
 }
@@ -65,8 +65,8 @@ func TestRepositoriesService_EditHook(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"web","events":["push"],"active":true,"config":{"url":"http://foo.com","content_type":"json"}}`)
 	})
 
-	configHook := NewWebHook([]string{"push"}, true,
-		HookConfig{"url":"http://foo.com",})
+	configHook := NewHook("web", []string{"push"}, true,
+		map[string]interface{}{"url": "http://foo.com"})
 	configHook.ID = 1
 	hook, err := client.Repositories.EditHook("o", "r", configHook)
 	if err != nil {
@@ -74,9 +74,9 @@ func TestRepositoriesService_EditHook(t *testing.T) {
 		return
 	}
 
-	want := Hook{ "", nil, nil, 1, HookOptions{"web", []string{"push"}, true,
-		HookConfig{"url":"http://foo.com", "content_type":"json"},},}
-		if !reflect.DeepEqual(*hook, want) {
+	want := Hook{"", nil, nil, 1, HookOptions{"web", []string{"push"}, true,
+		map[string]interface{}{"url": "http://foo.com", "content_type": "json"}}}
+	if !reflect.DeepEqual(*hook, want) {
 		t.Errorf("Repositories.EditHook returned %+v, want %+v", *hook, want)
 	}
 }
@@ -112,4 +112,3 @@ func TestRepositoriesService_DeleteHook(t *testing.T) {
 		return
 	}
 }
-

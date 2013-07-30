@@ -12,22 +12,29 @@ import (
 
 // Hook represents a github hook.
 type Hook struct {
-	URL         string     `json:"url,omitempty"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
-	CreatedAt   *time.Time `json:"created_at,omitempty"`
-	ID          int        `json:"id,omitempty"`
+	URL       string     `json:"url,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	ID        int        `json:"id,omitempty"`
 	HookOptions
 }
 
 // HookOptions are user configurable options for hooks.
 type HookOptions struct {
-	Name       string                 `json:"name,omitempty"`
-	Events     []string               `json:"events,omitempty"`
-	Active     bool                   `json:"active,omitempty"`
-	HookConfig          `json:"config,omitempty"`
+	Name   string                 `json:"name,omitempty"`
+	Events []string               `json:"events,omitempty"`
+	Active bool                   `json:"active,omitempty"`
+	Config map[string]interface{} `json:"config,omitempty"`
 }
 
-type HookConfig map[string]interface{}
+// NewHook creats a new hook with the given user configurations.
+func NewHook(name string, events []string, active bool, config map[string]interface{}) *Hook {
+	return &Hook{
+		"", nil, nil, 0, HookOptions{
+			name, events, active, config,
+		},
+	}
+}
 
 // ListHooks retrieves a list of hooks for the given repository.
 //
