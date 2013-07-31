@@ -27,15 +27,6 @@ type HookOptions struct {
 	Config map[string]interface{} `json:"config,omitempty"`
 }
 
-// NewHook creats a new hook with the given user configurations.
-func NewHook(name string, events []string, active bool, config map[string]interface{}) *Hook {
-	return &Hook{
-		"", nil, nil, 0, HookOptions{
-			name, events, active, config,
-		},
-	}
-}
-
 // ListHooks retrieves a list of hooks for the given repository.
 //
 // GitHub API docs: http://developer.github.com/v3/repos/hooks/#list
@@ -67,9 +58,9 @@ func (s *RepositoriesService) GetHook(owner, repo string, id uint) (*Hook, error
 // CreateHook creates a hook to the authenticated user's given repo.
 //
 // GitHub API docs: http://developer.github.com/v3/repos/hooks/#create-a-hook
-func (s *RepositoriesService) CreateHook(owner, repo string, hook *Hook) (*Hook, error) {
+func (s *RepositoriesService) CreateHook(owner, repo string, hook *HookOptions) (*Hook, error) {
 	u := fmt.Sprintf("repos/%v/%v/hooks", owner, repo)
-	req, err := s.client.NewRequest("POST", u, hook.HookOptions)
+	req, err := s.client.NewRequest("POST", u, hook)
 	if err != nil {
 		return nil, err
 	}
@@ -81,9 +72,9 @@ func (s *RepositoriesService) CreateHook(owner, repo string, hook *Hook) (*Hook,
 // EditHook edits a specified hook for the given repository.
 //
 // GitHub API docs: http://developer.github.com/v3/repos/hooks/#edit-a-hook
-func (s *RepositoriesService) EditHook(owner, repo string, hook *Hook) (*Hook, error) {
-	u := fmt.Sprintf("repos/%v/%v/hooks/%v", owner, repo, hook.ID)
-	req, err := s.client.NewRequest("PATCH", u, hook.HookOptions)
+func (s *RepositoriesService) EditHook(owner, repo string, id int, hook *HookOptions) (*Hook, error) {
+	u := fmt.Sprintf("repos/%v/%v/hooks/%v", owner, repo, id)
+	req, err := s.client.NewRequest("PATCH", u, hook)
 	if err != nil {
 		return nil, err
 	}
