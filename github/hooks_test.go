@@ -41,9 +41,9 @@ func TestRepositoriesService_CreateHook(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"web","events":["push"],"active":true,"config":{"url":"http://foo.com","content_type":"json"}}`)
 	})
 
-	configHook := NewHook("web", []string{"push"}, true,
-		map[string]interface{}{"url": "http://foo.com", "content_type": "json"})
-	hook, err := client.Repositories.CreateHook("o", "r", configHook)
+	configHook := Hook{"", nil, nil, 1, HookOptions{"web", []string{"push"}, true,
+		map[string]interface{}{"url": "http://foo.com", "content_type": "json"}}}
+	hook, err := client.Repositories.CreateHook("o", "r", &configHook.HookOptions)
 	if err != nil {
 		t.Errorf("Repositories.CreateHook returned error: %+v", err)
 		return
@@ -65,10 +65,10 @@ func TestRepositoriesService_EditHook(t *testing.T) {
 		fmt.Fprint(w, `{"id":1,"name":"web","events":["push"],"active":true,"config":{"url":"http://foo.com","content_type":"json"}}`)
 	})
 
-	configHook := NewHook("web", []string{"push"}, true,
-		map[string]interface{}{"url": "http://foo.com"})
+	configHook := Hook{"", nil, nil, 1, HookOptions{"web", []string{"push"}, true,
+		map[string]interface{}{"url": "http://foo.com"}}}
 	configHook.ID = 1
-	hook, err := client.Repositories.EditHook("o", "r", configHook)
+	hook, err := client.Repositories.EditHook("o", "r", configHook.ID, &configHook.HookOptions)
 	if err != nil {
 		t.Errorf("Repositories.EditHook returned error: %+v", err)
 		return
