@@ -125,6 +125,9 @@ type Client struct {
 	Licenses       *LicensesService
 	Migrations     *MigrationService
 	Reactions      *ReactionsService
+
+	// Enterprise Services
+	AdminStats *AdminStatsService
 }
 
 type service struct {
@@ -195,6 +198,7 @@ func NewClient(httpClient *http.Client) *Client {
 	c.Repositories = (*RepositoriesService)(&c.common)
 	c.Search = (*SearchService)(&c.common)
 	c.Users = (*UsersService)(&c.common)
+	c.AdminStats = (*AdminStatsService)(&c.common)
 	return c
 }
 
